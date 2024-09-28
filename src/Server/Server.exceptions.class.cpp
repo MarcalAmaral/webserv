@@ -19,3 +19,7 @@ const char *Server::ServerListenException::what() const throw() {
 const char *Server::ServerEPollCreateInstanceException::what() const throw() {
 	return ("Error: cannot create epoll instance");
 }
+
+const char *Server::ServerEPollAddFdException::what() const throw() {
+	return ("Error: cannot add socket to epoll");
+}

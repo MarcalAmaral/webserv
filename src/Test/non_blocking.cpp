@@ -9,7 +9,7 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 4096
 #define MAX_EVENTS 10
 
 int	main(void) {
@@ -67,6 +67,14 @@ int	main(void) {
 							epoll_ctl(epollFd, EPOLL_CTL_DEL, ev.data.fd, &ev);
 							close(ev.data.fd);
 						}
+					}
+					if (evArray[i].events & EPOLLOUT) {
+						send(evArray[i].data.fd, msg, strlen("Hello world\n"), 0);
+						// memset(buffer, 0, BUFFER_SIZE);
+						// memset(&ev, 0, sizeof(ev));
+						// ev.data.fd = evArray[i].data.fd;
+						// epoll_ctl(epollFd, EPOLL_CTL_DEL, ev.data.fd, &ev);
+						// close(ev.data.fd);
 					}
 				}
 			}

@@ -16,7 +16,7 @@ SOURCE += $(shell find ./ -type f -name "Server/*.cpp")
 OBJECTS := $(patsubst ./%,$(BUILD)/%,$(SOURCE:.cpp=.o))
 
 # Includes
-INCLUDES := -I./
+INCLUDES := -I./src -I./include
 
 define compile_source
         $(CXX) -c $(CXXFLAGS) $(INCLUDES) -o $@ $<
