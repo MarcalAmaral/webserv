@@ -1,14 +1,19 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+# include <string>
 # include <netinet/in.h>
 # include <exception>
+# include "defines.hpp"
+# include <sys/epoll.h>
 
 class Server {
 	private:
 		struct sockaddr_in _serverAddr;
 		int	_epollFd;
 		int	_serverSocket;
+		int	_eventsOcurred;
+		struct epoll_event _events[MAX_EVENTS];
 	public:
 		Server();
 		~Server();
@@ -44,6 +49,10 @@ class Server {
 		};
 
 		void	initLoopEvent(void);
+		void	acceptConnection();
+		void	readRequest(int fd);
+		void	sendResponse(int fd);
+		void	closeConnection(int fd);
 };
 
 #endif //SERVER_HPP
