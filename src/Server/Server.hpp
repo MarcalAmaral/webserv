@@ -53,6 +53,7 @@ class Server {
 		void	readRequest(int fd);
 		void	sendResponse(int fd);
 		void	closeConnection(int fd);
+		void	parserConfig(const std::string &pathname);
 };
 
 #endif //SERVER_HPP
