@@ -3,7 +3,8 @@
 // 1. Diretivas que começam com '#' são comentários e serão ignorados.
 // 2. Organizarei em blocos de diretivas, nenhuma diretiva fora de um bloco será aceita, pois fora
 // de um bloco não possuí contexto suficiente para ser interpretado.
-// 3. Todas as diretivas devem encerrarem com ';' se não serão consideradas erros de sintaxe.
+// 3. Todas as diretivas devem encerrarem com ';' e consistem em um nome e parâmetro 
+// separado por espaços se não serão consideradas erros de sintaxe.
 // 4. Os ';' delimitam uma diretiva, sendo assim a diretiva encerrará somente com ';'
 // 5. Diretivas necessárias que o arquivo de configuração devem comtemplar: 
 // 5.1 "port, host" (para cada servidor [Obrigatório])
