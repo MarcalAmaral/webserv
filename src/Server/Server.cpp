@@ -100,6 +100,7 @@ void	Server::readRequest(int fd) {
 	memset(buffer, 0, sizeof(buffer));
 	while ((bytesRead = recv(fd, buffer, BUFFER_SIZE, 0)) && bytesRead != -1) {
 		request += buffer;
+		std::cout << request << std::endl;
 		memset(buffer, 0, sizeof(buffer));
 	}
 	if (request.find("\r\n\r\n") != 0) {
