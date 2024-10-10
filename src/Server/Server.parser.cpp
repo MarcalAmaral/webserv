@@ -21,8 +21,8 @@
 //	5.5.3 Definir um diretório ou arquivo que um arquivo deve ser procurado (exemplo se uma url
 //	se a url /marcal é roteada para /tmp/www, a url /marcal/arquivos será a url
 //	/tmp/www/marcal/arquivos).
-//	5.5.4 Permintir a listagem de diretórios ou não.
-//	5.5.5 Definir um arquivo padrão para devolver o response caso a requisição tenha sido feita
+//	5.5.4 Permitir a listagem de diretórios ou não.
+//	5.5.5 Definir um arquivo padrão para devolver no response caso a requisição tenha sido feita
 //	para um recurso que é um diretório.
 //	5.5.6 Executar CGI baseado em certas extensões de arquivos (por exemplo .php)
 //	5.5.7 Deve funcionar com os métodos POST e GET.
@@ -30,7 +30,7 @@
 //	serem salvos.
 //	5.5.9 (Observações): 
 //		5.5.9.1 O que é um CGI?
-//		5.5.9.2 Como você não chamará o CGI diretamente, usde o caminho completo como PATH_INFO
+//		5.5.9.2 Como você não chamará o CGI diretamente, use o caminho completo como PATH_INFO
 //		5.5.9.3 Lembre-se que para requisições em pedaços seu servidor deve trazer o contéudo todo
 //		e o CGI vai esperar EOF como o final de um body.
 //		5.5.9.4 Se content-lenght não é retornado do CGI, o EOF mais determinar o final dos dados
@@ -40,6 +40,7 @@
 //		5.5.9.7	Seu servidor deve roda com um CGI.
 //	Observação: Você deve fornecer arquivos de configuração e arquivos padrões básicos para testar
 //	e demonstrar que cada funcionalidade funciona durante à avaliação!
+//	5.6 Configurar páginas de erros padrões para serem usadas.
 
 
 void	Server::parserConfig(const std::string &pathname) {
