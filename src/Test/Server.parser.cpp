@@ -1,3 +1,6 @@
+#include <iostream>
+#include <vector>
+#include <fstream>
 #include "Server.hpp"
 
 // 1. Diretivas que começam com '#' são comentários e serão ignorados.
@@ -44,10 +47,17 @@
 
 
 void	Server::parserConfig(const std::string &pathname) {
-	std::ifstream configFile(pathname);
+	std::ifstream	configFile(pathname.c_str());
+	std::string		line;
+	std::vector<std::string> lines;
 
-	if (configFile.fail()) {
-		std::cerr << "Error: to open read file" << std::endl;
+	if (configFile.fail() == true)
+		throw std::runtime_error("Error to open configuration file");
+	while (std::getline(configFile, line).eof() == false)
+		lines.push_back(line);
+	if (lines.empty() == true) {
+		configFile.close();
+		throw std::runtime_error("Empty file");
 	}
-
+	
 }

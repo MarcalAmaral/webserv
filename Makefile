@@ -1,53 +1,49 @@
-# Project name
-NAME := webserv
+NAME = webserv
 
-# Compiler and flags
-CXX := c++
-CXXFLAGS := -g -Wall -Werror -Wextra -std=c++98
+CXX = c++
+CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
-# Directories
-BUILD := build
+BUILD = build
 
-# Source files
-SOURCE := ./src/webserv.cpp ./src/Server/Server.cpp ./src/Server/Server.exceptions.class.cpp
+SRC_PATH = src src/Server
 
-# Object files
-OBJECTS := $(patsubst ./%,$(BUILD)/%,$(SOURCE:.cpp=.o))
+SOURCE += $(foreach path, $(SRC_PATH), $(wildcard $(addprefix $(path)/, *.cpp)))
 
-# Includes
-INCLUDES := -I./src -I./include
+OBJECT = $(SOURCE:%.cpp=$(BUILD)/%.o)
 
-define compile_source
-	$(CXX) -c $(CXXFLAGS) $(INCLUDES) -o $@ $<
-endef
+INCLUDE = -I./src -I./include
 
-define create_dir
+define makedir
 	@mkdir -p $(dir $@)
 endef
 
-define compile_executable
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^
+define compile_objects
+	$(CXX) -c $(CXXFLAGS) $(INCLUDE) -o $@ $<
 endef
 
-define clean_objs
-	rm -rf $(BUILD)
+define compile_executable
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
+endef
+
+define clean_objects
+	@rm -rf $(BUILD)
 endef
 
 define clean_executable
-	rm -f $(NAME)
+	@rm -f $(NAME)
 endef
 
 all: $(NAME)
 
-$(NAME): $(OBJECTS)
+$(NAME): $(OBJECT)
 	$(call compile_executable)
 
 $(BUILD)/%.o: %.cpp
-	$(call create_dir)
-	$(call compile_source)
+	$(call makedir)
+	$(call compile_objects)
 
 clean:
-	$(call clean_objs)
+	$(call clean_objects)
 
 fclean: clean
 	$(call clean_executable)
@@ -55,4 +51,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re Makefile
-.DEFAULT_GOAL = all
+.DEFAULT_GOAL: all%

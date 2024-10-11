@@ -10,7 +10,6 @@
 class Server {
 	private:
 		struct sockaddr_in _serverAddr;
-		int	_epollFd;
 		int	_serverSocket;
 		int	_eventsOcurred;
 		struct epoll_event _events[MAX_EVENTS];

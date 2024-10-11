@@ -12,5 +12,4 @@ enum e_exit {
     FAIL = 1,
 };
 
-
 #endif // DEFINES_HPP
