@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
 BUILD = build
 
-SRC_PATH = src src/Server
+SRC_PATH = src src/Master src/Utils src/Master/parser
 
 SOURCE += $(foreach path, $(SRC_PATH), $(wildcard $(addprefix $(path)/, *.cpp)))
 
@@ -51,4 +51,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re Makefile
-.DEFAULT_GOAL: all%
+.DEFAULT_GOAL: all

@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/epoll.h>
-#include "Server.hpp"
+#include "Server.class.hpp"
 
 #define HTTP_RESPONSE "HTTP/1.1 200 OK\r\nContent-Lenght: HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length:13\r\n\r\nHello world\n"
 

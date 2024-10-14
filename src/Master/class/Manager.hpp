@@ -1,5 +1,5 @@
-#ifndef MASTER_CLASS_HPP
-# define MASTER_CLASS_HPP
+#ifndef MANAGER_HPP
+# define MANAGER_HPP
 
 # include <vector>
 
@@ -7,17 +7,17 @@ class Server;
 class Client;
 
 namespace Master {
-	class MasterClass {
+	class Manager {
 		private:
 			std::vector<Server>	_servers;
 			std::vector<Client>	_clients;
 			int					_epollFd;
 		public:
-			Master();
-			~Master();
+			Manager();
+			~Manager();
 
 			friend class Server;
 	};
 };
 
-#endif // MASTER_CLASS_HPP
+#endif // MANAGER_HPP
