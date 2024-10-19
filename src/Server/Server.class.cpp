@@ -12,10 +12,10 @@
 
 Server::Server(void) {
 	int	optval = 1;
-	struct epoll_event ev;
-	_epollFd = epoll_create1(0);
-	if (_epollFd == -1)
-		throw (ServerEPollCreateInstanceException());
+	// struct epoll_event ev;
+	// _epollFd = epoll_create1(0);
+	// if (_epollFd == -1)
+	// 	throw (ServerEPollCreateInstanceException());
 	_serverSocket = socket(PF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
 	if (_serverSocket == -1) {
 		close(_epollFd);
@@ -50,14 +50,6 @@ Server::Server(void) {
 
 Server::~Server(void) {}
 
-// void	*threadRoutine(void *arg) {
-
-// }
-
-// void	Server::initThreads(void) {
-
-// }
-
 void	Server::acceptConnection() {
 	int	clientFd;
 	int	socketFlags;
@@ -86,6 +78,7 @@ void	Server::acceptConnection() {
 		std::cerr << "Error: Cannot add new socket fd to epoll" << std::endl;
 		return ;
 	}
+	clients[clientFd] = new Client(clientFd);
 	std::cout << "New connection established on address: " << clientAddr.sin_addr.s_addr
 	<< " on port: " << clientAddr.sin_port << " on fd: " << clientFd << std::endl;
 }
@@ -136,12 +129,12 @@ void	Server::initLoopEvent(void) {
 			std::cerr << "Error: epoll_wait" << std::endl;
 		if (_eventsOcurred > 0) {
 			for (int i = 0; i < _eventsOcurred; ++i) {
-				if (_events[i].events & EPOLLIN && _events[i].data.fd == _serverSocket)
-					acceptConnection();
+				if (_events[i].events & EPOLLIN && (serverFd = isNewConnetion(_events[i].data.fd) != 0))
+					acceptConnection(serverFd);
 				else if (_events[i].events & EPOLLIN) 
-					readRequest(_events[i].data.fd);
+					clients[events[i].data.fd].readRequest();
 				else if (_events[i].events & EPOLLOUT)
-					sendResponse(_events[i].data.fd);
+					clients[events[i].data.fd].sendResponse();
 				else if (_events[i].events & EPOLLRDHUP || _events[i].events & EPOLLHUP) {
 					closeConnection(_events[i].data.fd);
 					continue ;

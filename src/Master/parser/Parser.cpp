@@ -1,48 +1,44 @@
 #include <vector>
 #include <fstream>
-#include <exception>
 #include <iostream>
+#include <cstring>
+#include <sstream>
 #include "Parser.hpp"
 #include "ParserValidations.hpp"
 #include "Utils/Utils.hpp"
+#include "Logger/Logger.hpp"
 
-using namespace Utils;
 using namespace Master;
 using namespace std;
 
 void	Parser::parser(const char *pathname) {
-	try {
-		Parser::Validation::validateFile(pathname);
-		ifstream file(pathname);
-		Parser::readTokens(file);
-	} catch (const exception &e) {
-		cerr << e.what() << endl;
-		terminate();
-	}
+	using namespace Parser::Validation;
+	t_conf_file cf;
+
+	cf.pathname = pathname;
+	validateFile(&cf);
+	readTokens(&cf);
 }
 
-void	Parser::readTokens(ifstream &file) {
-	// short		startDirectiveBlock = 0;
-	// ofstream		tokens;
-	string			line;
-	size_t			foundComment;
-	string			formattedLine;
-	vector<string>	lines;
+void	Parser::lineToTokens(t_conf_file *conf, string line) {
+	using namespace Logger;
+	static int start_line;
+	stringstream ss(line);
 
-	while (getline(file, line).fail() == false) {
-		foundComment = line.find('#');
-		formattedLine = trim(line);
-		if (foundComment) {
-			formattedLine = (formattedLine.substr(0, foundComment));
-			if (formattedLine[0] != '#' && formattedLine.empty() == false)
-				lines.push_back(formattedLine);
-			continue ;
-		}
-		if (formattedLine[0] != '#' && formattedLine.empty() == false)
-			lines.push_back(formattedLine);
+	Utils::removeComments();
+	start_line++;
+}
+
+void	Parser::readTokens(t_conf_file *cf) {
+	using namespace Logger;
+	string	line;
+
+	while (getline(cf->file, line).good() == true) {
+		cf->tokens.push_back(line);
+		// Parser::lineToTokens(cf, line);
 	}
-	// print vector content;
-	for (vector<string>::iterator it=lines.begin(); it != lines.end(); ++it)
-		std::cout << *it << std::endl;
-	return ;
+	if (cf->file.fail() == true)
+		throw (runtime_error(cfFileErr(cf->pathname, std::strerror(errno))));
+	for (vector<string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it)
+		cout << *it << endl;
 }

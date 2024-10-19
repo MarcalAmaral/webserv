@@ -17,42 +17,43 @@ class Server {
 		Server();
 		~Server();
 
-		class ServerBindSocketException : public std::exception {
-			public:
-				const char *what() const throw();
-		};
+		// class ServerBindSocketException : public std::exception {
+		// 	public:
+		// 		const char *what() const throw();
+		// };
 
-		class ServerCreateSocketException : public std::exception {
-			public:
-				const char *what() const throw();
-		};
+		// class ServerCreateSocketException : public std::exception {
+		// 	public:
+		// 		const char *what() const throw();
+		// };
 
-		class ServerSetSocketOptionsException : public std::exception {
-			public:
-				const char *what() const throw();
-		};
+		// class ServerSetSocketOptionsException : public std::exception {
+		// 	public:
+		// 		const char *what() const throw();
+		// };
 
-		class ServerListenException : public std::exception {
-			public:
-				const char *what() const throw();
-		};
+		// class ServerListenException : public std::exception {
+		// 	public:
+		// 		const char *what() const throw();
+		// };
 
-		class ServerEPollCreateInstanceException : public std::exception {
-			public:
-				const char *what() const throw();
-		};
+		// class ServerEPollCreateInstanceException : public std::exception {
+		// 	public:
+		// 		const char *what() const throw();
+		// };
 
-		class ServerEPollAddFdException : public std::exception {
-			public:
-				const char *what() const throw();
-		};
+		// class ServerEPollAddFdException : public std::exception {
+		// 	public:
+		// 		const char *what() const throw();
+		// };
 
-		void	initLoopEvent(void);
-		void	acceptConnection();
-		void	readRequest(int fd);
-		void	sendResponse(int fd);
-		void	closeConnection(int fd);
-		void	parserConfig(const std::string &pathname);
+		// void	initLoopEvent(void);
+		// void	acceptConnection();
+		// void	readRequest(int fd);
+		// void	sendResponse(int fd);
+		// void	closeConnection(int fd);
+		// void	parserConfig(const std::string &pathname);
+		void	initServer();
 };
 
 #endif //SERVER_HPP

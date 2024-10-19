@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
 BUILD = build
 
-SRC_PATH = src src/Master src/Utils src/Master/parser
+SRC_PATH = src src/Master src/Utils src/Master/parser src/Logger
 
 SOURCE += $(foreach path, $(SRC_PATH), $(wildcard $(addprefix $(path)/, *.cpp)))
 

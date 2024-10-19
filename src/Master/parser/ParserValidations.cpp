@@ -1,26 +1,16 @@
 #include <fstream>
-#include <sys/stat.h>
 #include <cerrno>
 #include <cstring>
+#include "Parser.hpp" 
 #include "ParserValidations.hpp"
+#include "Logger/Logger.hpp"
 
-using namespace Master;
 using namespace std;
 
-void	Parser::Validation::validateFile(const char *pathname) {
-	struct stat buf;
-	ifstream	file;
+void	Master::Parser::Validation::validateFile(t_conf_file *conf) {
+	using namespace Logger;
 
-	if (stat(pathname, &buf) == ERROR)
-		throw (runtime_error("Configuration file error:\n\tfilename: " +
-		string(pathname) + "\n\terror: " + string(strerror(errno))));
-	if (S_ISREG(buf.st_mode) == false)
-		throw (InvalidFileException());
-	file.open(pathname);
-	if (file.fail()) {
-		file.close();
-		throw (runtime_error("Configuration file error:\n\tfilename: "
-			+ string(pathname) + "\n\terror: can't open file"));
-	}
-	file.close();
+	conf->file.open(conf->pathname);
+	if (conf->file.is_open() == false)
+		throw (runtime_error(confFileErr(conf->pathname, std::strerror(errno))));
 }

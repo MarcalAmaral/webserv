@@ -3,18 +3,12 @@
 
 #include <stdexcept>
 
-# define ERROR -1
+struct t_conf_file;
 
 namespace Master {
 	namespace Parser {
 		namespace Validation {
-			class	InvalidFileException : public std::exception {
-				public:
-					const char *what() const throw() {
-						return ("Error Master Parser: invalid configuration file");
-					}
-			};
-			void	validateFile(const char *pathname);
+			void	validateFile(t_conf_file *conf);
 		}
 	}
 }
