@@ -9,14 +9,23 @@
 namespace Master {
 	namespace Parser {
 		typedef struct s_conf_file {
+			int			currentLine;
 			const char *pathname;
 			std::vector<std::string> tokens;
 			std::ifstream file;
 		} t_conf_file;
 
 		void	parser(const char *pathname);
-		void	readTokens(t_conf_file *conf);
-		void	lineToTokens(t_conf_file *conf, std::string line);
+		void	readTokens(t_conf_file *cf);
+		void	lineToTokens(std::vector<std::string> &tokens, std::string &line);
+		// void	processTokens(t_conf_file *cf);
+		// void	handleServer();
+		// void	handleLocation();
+		// void	handleListen();
+		// void	handleServerName();
+		// void	handleClientMaxBodySize();
+		// void	handleErrorPage();
+
 		// void	handleServerBlockDirective(std::vector<string> &lines, std::vector<estring>::iterator &start);
 	}
 }

@@ -12,5 +12,5 @@ void	Master::Parser::Validation::validateFile(t_conf_file *conf) {
 
 	conf->file.open(conf->pathname);
 	if (conf->file.is_open() == false)
-		throw (runtime_error(confFileErr(conf->pathname, std::strerror(errno))));
+		throw (runtime_error(cfFileErr(conf->pathname, std::strerror(errno))));
 }
