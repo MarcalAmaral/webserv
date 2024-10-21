@@ -27,20 +27,37 @@ void	Parser::parser(const char *pathname) {
 
 // }
 
-void	Parser::lineToTokens(vector<string> &tokens, string &line) {
+void	Parser::lineToTokens(t_conf_file *cf, string &line) {
 	using namespace Logger;
     stringstream    ss;
+	string			formattedToken;
+	string			tokenRevised;
     string          formattedLine;
     string          token;
 
 	formattedLine = Parser::Utils::removeCommentsAndSpaces(line);
+	Parser::Utils::adjustBrackets(formattedLine);
     if (formattedLine.empty() == true)
         return ;
     ss.str(formattedLine);
     while (ss.fail() == false) {
         ss >> ws >> token;
-        if (token.size() > 0)
-            tokens.push_back(token);
+        if (token.size() > 0) {
+			// size_t 	leftBracket = token.find('{');
+			// size_t	rightBracket = token.find('}');
+			// if (leftBracket != string::npos || rightBracket != string::npos) {
+			// 	if (leftBracket == string::npos)
+			// 		formattedToken = token.substr(0, rightBracket);
+			// 	else if (rightBracket == string::npos)
+			// 		formattedToken = token.substr(0, leftBracket);
+			// 	else if (rightBracket < leftBracket)
+			// 		formattedToken = token.substr(0, rightBracket);
+			// 	else
+			// 		formattedToken = token.substr(0, leftBracket);
+			// }
+			cf->tokensLine.push_back(cf->currentLine);
+            cf->tokens.push_back(token);
+		}
         token.clear();
     }
     return ;
@@ -50,12 +67,19 @@ void	Parser::readTokens(t_conf_file *cf) {
 	using namespace Logger;
 	string	line;
 
-	while (getline(cf->file, line).good() == true)
-    	Parser::lineToTokens(cf->tokens, line);
+	while (getline(cf->file, line).good() == true) {
+		cout << line << endl;
+		cf->currentLine++;
+    	Parser::lineToTokens(cf, line);
+	}
 	if (cf->file.fail() == true)
 		throw (runtime_error(cfFileErr(cf->pathname, std::strerror(errno))));
-	for (vector<string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it)
+	vector<int>::iterator itInt = cf->tokensLine.begin();
+	for (vector<string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it) {
+		cout << "\t" << *itInt << endl;
 		cout << *it << endl;
+		++itInt;
+	}
 }
 
 // char *

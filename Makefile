@@ -1,7 +1,7 @@
 NAME = webserv
 
 CXX = c++
-CXXFLAGS = -Wall -Werror -Wextra -std=c++98
+CXXFLAGS = -g -Wall -Werror -Wextra -std=c++98
 
 BUILD = build
 

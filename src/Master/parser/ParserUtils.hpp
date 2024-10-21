@@ -7,6 +7,7 @@ namespace Master {
     namespace Parser {
         namespace Utils {
             std::string removeCommentsAndSpaces(const std::string &line);
+            void adjustBrackets(std::string &fline);
         }
     }
 }

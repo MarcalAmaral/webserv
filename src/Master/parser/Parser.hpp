@@ -12,19 +12,29 @@ namespace Master {
 			int			currentLine;
 			const char *pathname;
 			std::vector<std::string> tokens;
+			std::vector<int> tokensLine;
 			std::ifstream file;
 		} t_conf_file;
 
 		void	parser(const char *pathname);
 		void	readTokens(t_conf_file *cf);
-		void	lineToTokens(std::vector<std::string> &tokens, std::string &line);
-		// void	processTokens(t_conf_file *cf);
-		// void	handleServer();
-		// void	handleLocation();
-		// void	handleListen();
-		// void	handleServerName();
-		// void	handleClientMaxBodySize();
-		// void	handleErrorPage();
+		void	lineToTokens(t_conf_file *cf, std::string &line);
+		void	processTokens(t_conf_file *cf);
+		// main directive
+		void	handleServer();
+		// server directives
+		void	handleListen();
+		void	handleServerName();
+		void	handleErrorPage();
+		void	handleClientMaxBodySize();
+		// location directives
+		void	handleLocation();
+		void	handleLocationAllowMethods();
+		void	handleLocationRedirect();
+		void	handleLocationRoot();
+		void	handleLocationAutoIndex();
+		void	handleLocationCGI();
+		void	handleLocationUploadDir();
 
 		// void	handleServerBlockDirective(std::vector<string> &lines, std::vector<estring>::iterator &start);
 	}
