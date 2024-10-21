@@ -18,10 +18,11 @@ namespace Master {
 
 		void	parser(const char *pathname);
 		void	readTokens(t_conf_file *cf);
+		void	appendToken(t_conf_file *cf, const std::string &token);
 		void	lineToTokens(t_conf_file *cf, std::string &line);
 		void	processTokens(t_conf_file *cf);
 		// main directive
-		void	handleServer();
+		void	handleServer(t_conf_file *cf, std::vector<string>::iterator &it);
 		// server directives
 		void	handleListen();
 		void	handleServerName();

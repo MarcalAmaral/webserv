@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <sstream>
+#include <cctype>
 #include "Parser.hpp"
 #include "ParserValidations.hpp"
 #include "ParserUtils.hpp"
@@ -16,63 +17,99 @@ void	Parser::parser(const char *pathname) {
 	using namespace Parser::Validation;
 	t_conf_file cf;
 
-    cf.currentLine = 0;
+	cf.currentLine = 0;
 	cf.pathname = pathname;
 	validateFile(&cf);
 	readTokens(&cf);
-    // processTokens(&cf);
+	processTokens(&cf);
 }
 
-// void    processTokens(t_conf_file *cf) {
+void	Parser::handleServer(t_conf_file *cf, vector<string>::iterator &it) {
+	(void)cf;
+	return ;
+}
 
-// }
+void    Parser::processTokens(t_conf_file *cf) {
+	using namespace Parser;
+	using namespace Logger;
+
+	int		nServers = 0;
+	for (vector<string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it) {
+		if (*it == "server") {
+			nServers++;
+			Parser::handleServer(cf, it);	
+		}
+	}
+	if (nServers == 0)
+		throw (runtime_error(cfFileErr(cf->pathname, "server directive not found")));
+}
+
+void	Parser::appendToken(t_conf_file *cf, const string &token) {
+	cf->tokens.push_back(token);
+	cf->tokensLine.push_back(cf->currentLine);
+}
 
 void	Parser::lineToTokens(t_conf_file *cf, string &line) {
-	using namespace Logger;
-    stringstream    ss;
-	string			formattedToken;
-	string			tokenRevised;
-    string          formattedLine;
-    string          token;
+	bool	endToken = false;
+	string	token = "";
+	string fline(Parser::Utils::removeCommentsAndSpaces(line));
 
-	formattedLine = Parser::Utils::removeCommentsAndSpaces(line);
-	Parser::Utils::adjustBrackets(formattedLine);
-    if (formattedLine.empty() == true)
-        return ;
-    ss.str(formattedLine);
-    while (ss.fail() == false) {
-        ss >> ws >> token;
-        if (token.size() > 0) {
-			// size_t 	leftBracket = token.find('{');
-			// size_t	rightBracket = token.find('}');
-			// if (leftBracket != string::npos || rightBracket != string::npos) {
-			// 	if (leftBracket == string::npos)
-			// 		formattedToken = token.substr(0, rightBracket);
-			// 	else if (rightBracket == string::npos)
-			// 		formattedToken = token.substr(0, leftBracket);
-			// 	else if (rightBracket < leftBracket)
-			// 		formattedToken = token.substr(0, rightBracket);
-			// 	else
-			// 		formattedToken = token.substr(0, leftBracket);
-			// }
-			cf->tokensLine.push_back(cf->currentLine);
-            cf->tokens.push_back(token);
+	if (fline.empty())
+		return ;
+	for (size_t it = 0; it <= fline.size(); ++it) {
+		// cout << fline[it] << endl;
+		if (isspace(fline[it]) || fline[it] == ';' || it == fline.size()) {
+			if (fline[it] == ';')
+				token.push_back(';');
+			endToken = true;
 		}
-        token.clear();
-    }
-    return ;
+		else if (fline[it] == '{')
+			Parser::appendToken(cf, "{");
+		else if (fline[it] == '}')
+			Parser::appendToken(cf, "}");
+		else if (fline[it] != '{' && fline[it] != '}')
+			token.push_back(fline[it]);
+		if (endToken == true) {
+			if (token.size() > 0)
+				Parser::appendToken(cf, token);
+			endToken = false;
+			token.clear();
+		}
+	}
 }
+
+// void	Parser::lineToTokens(t_conf_file *cf, string &line) {
+	// using namespace Logger;
+	// stringstream    ss;
+	// string			formattedToken;
+	// string          formattedLine;
+	// string          token;
+// 
+	// formattedLine = Parser::Utils::removeCommentsAndSpaces(line);
+	// Parser::Utils::adjustBracketsLeft(formattedLine);
+	// if (formattedLine.empty() == true)
+		// return ;
+	// ss.str(formattedLine);
+	// while (ss.fail() == false) {
+		// ss >> ws >> token;
+		// if (token.size() > 0) {
+			// cf->tokensLine.push_back(cf->currentLine);
+			// cf->tokens.push_back(token);
+		// }
+		// token.clear();
+	// }
+	// return ;
+// }
 
 void	Parser::readTokens(t_conf_file *cf) {
 	using namespace Logger;
 	string	line;
 
-	while (getline(cf->file, line).good() == true) {
-		cout << line << endl;
+	while (getline(cf->file, line)) {
 		cf->currentLine++;
-    	Parser::lineToTokens(cf, line);
+		Parser::lineToTokens(cf, line);
 	}
-	if (cf->file.fail() == true)
+	if (cf->file.bad() == true)
 		throw (runtime_error(cfFileErr(cf->pathname, std::strerror(errno))));
 	vector<int>::iterator itInt = cf->tokensLine.begin();
 	for (vector<string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it) {
