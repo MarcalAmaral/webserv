@@ -1,0 +1,117 @@
+#ifndef PARSER_HANDLER_HPP
+# define PARSER_HANDLER_HPP
+
+# include "Parser.hpp"
+
+namespace Master {
+	namespace Parser {
+		namespace Handler {
+			class HandlerClass {
+				private:
+					const std::string _cmd;
+					const unsigned int _type;
+				public:
+					HandlerClass(const std::string &cmd, const unsigned int type) : _cmd(cmd), _type(type) {};
+					~HandlerClass() {};
+					virtual void handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it) = 0;
+					const std::string &getCmd(void) {return (_cmd);}
+					const unsigned int getType(void)  {return (_type);}
+			};
+
+			class ServerHandler : public HandlerClass {
+				public:
+					ServerHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~ServerHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class ListenHandler : public HandlerClass {
+				public:
+					ListenHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~ListenHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class ServerNameHandler : public HandlerClass {
+				public:
+					ServerNameHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~ServerNameHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class ClientMaxBodySizeHandler : public HandlerClass {
+				public:
+					ClientMaxBodySizeHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~ClientMaxBodySizeHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class ErrorPageHandler : public HandlerClass {
+				public:
+					ErrorPageHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~ErrorPageHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class LocationHandler : public HandlerClass {
+				public:
+					LocationHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~LocationHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class AllowMethodsHandler : public HandlerClass {
+				public:
+					AllowMethodsHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~AllowMethodsHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class RedirectHandler : public HandlerClass {
+				public:
+					RedirectHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~RedirectHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class RootHandler : public HandlerClass {
+				public:
+					RootHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~RootHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class AutoIndexHandler : public HandlerClass {
+				public:
+					AutoIndexHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~AutoIndexHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class IndexHandler : public HandlerClass {
+				public:
+					IndexHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~IndexHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class CgiHandler : public HandlerClass {
+				public:
+					CgiHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~CgiHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			class UploadDirHandler : public HandlerClass {
+				public:
+					UploadDirHandler(const std::string &cmd, const unsigned int type) : HandlerClass(cmd, type) {};
+					~UploadDirHandler();
+					void	handler(Parser::t_conf_file *cf, std::vector<std::string>::iterator &it);
+			};
+
+			void	initHandlerModules(Parser::t_conf_file *cf);
+		}
+	}
+}
+
+#endif // PARSER_HANDLER_HPP
