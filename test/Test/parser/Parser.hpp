@@ -73,7 +73,6 @@ namespace Master {
 			const char *pathname;
 			// std::vector<Directive> directives;
 			// std::map<string, Handler::HandlerClass *> handlers;
-			std::vector<std::string>::iterator it;
 			std::vector<std::string> tokens;
 			std::vector<int> tokensLine;
 			std::ifstream file;
@@ -111,9 +110,6 @@ namespace Master {
 		void	handleLocationCGI();
 		void	handleLocationUploadDir();
 		// void	handleServerBlockDirective(std::vector<string> &lines, std::vector<estring>::iterator &start);
-		t_conf_file cf;
-		// initialize values of t_conf_file cf
-		void	initConf(void);
 	}
 }
 

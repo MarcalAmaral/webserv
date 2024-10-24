@@ -1,5 +1,4 @@
 #include <string>
-#include "Server/Server.hpp"
 #include "ParserHandler.hpp"
 #include "Parser.hpp"
 
@@ -11,7 +10,3 @@ void	Parser::Handler::initHandlerModules(Parser::t_conf_file *cf) {
 	modules[server]
 } 
 
-void	*Parser::Handler::handler(Parser::t_conf_file *cf) {
-	Server newServer = new Server();
-	
-}

@@ -5,7 +5,9 @@
 int	main(int ac, char **av) {
 	if (ac == 2) {
 		try {
-			Master::Parser::parser(av[1]);
+			using namespace Master::Parser;
+			initConf();
+			parser(&Master::Parser::cf, av[1]);
 			// Server server;
 			// std::string fileName(av[1]);
 			// server.parserConfig(fileName);

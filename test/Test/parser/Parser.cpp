@@ -11,33 +11,56 @@
 #include "Utils/Utils.hpp"
 #include "Logger/Logger.hpp"
 
-void	Master::Parser::initConf(void) {
-	using namespace Master::Parser;
-	cf.line = 1;
-	cf.pathname = NULL;
-}
+using namespace Master;
+using namespace std;
 
-void	*handlerDirective(t_conf_file *cf) {
+void	Parser::parser(const char *pathname) {
+	t_conf_file cf;
+	bool		endToken = false;
 
-}
+	cf.currentLine = 0;
+	cf.pathname = pathname;
+	Parser::Validation::validateFile(&cf);
+	Parser::readTokens(&cf);
 
-void	Master::Parser::parser(const char *pathname) {
-	using namespace Master::Parser;
+	for (vector<string>::iterator it=cf.tokens.begin(); it != cf.tokens.end(); ++it) {
+		for (;;) {
+			Parser::processTokens(&cf, it);
 
-	if (pathname) {
-		Validation::validateFile(&cf);
-		readTokens(&cf);
+		}
 	}
-	processTokens(&cf);
+	// Parser::Handler::initHandlerModules(&cf);
+	// Parser::processTokens(&cf);
 }
 
-void	Master::Parser::processTokens(t_conf_file *cf) {
-	enum {
-		START_BLOCK,
-		
-		END_FILE,
 
-	} state;
+void	Parser::handleDirective()
+{
+	
+}
+
+void	Parser::processTokens(t_conf_file *cf, vector<string>::iterator &line) {
+	bool			last_space = false;
+	enum e_context	context;
+	vector<string>	args;
+	string			token;
+	for (string::iterator it=line->begin(); it != line->end(); ++it) {
+		switch (*it) {
+			case '\n':
+				cf->line++;
+			case ' ' || '\t' || '\r' || '\n':
+				last_space = true;
+				break ;
+			default:
+				token.push_back(*it);
+		}
+		if (last_space) {
+			args.push_back(token);
+			last_space = false;
+			token.clear();
+		}
+	}
+	
 }
 
 bool	Parser::checkDirectives(string &directive, enum e_context type) {
@@ -111,7 +134,7 @@ bool	Parser::checkDirectives(string &directive, enum e_context type) {
 
 void	Parser::appendToken(t_conf_file *cf, const string &token) {
 	cf->tokens.push_back(token);
-	cf->tokensLine.push_back(cf->line);
+	cf->tokensLine.push_back(cf->currentLine);
 }
 
 void	Parser::lineToTokens(t_conf_file *cf, string &line) {
@@ -148,6 +171,7 @@ void	Parser::readTokens(t_conf_file *cf) {
 	string	fline;
 
 	while (getline(cf->file, line)) {
+		// cf->currentLine++;
 		fline = Parser::Utils::removeCommentsAndSpaces(line);
 		if (fline.size() > 0) {
 			cf->tokens.push_back(fline);

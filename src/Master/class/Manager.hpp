@@ -11,6 +11,9 @@ namespace Master {
 		public:
 			Manager();
 			~Manager();
+			void	appendServer(const Server &newServer) {
+				_servers.push_back(newServer);
+			};
 
 			friend class Server;
 		private:
@@ -18,6 +21,7 @@ namespace Master {
 			std::vector<Client>	_clients;
 			int					_epollFd;
 	};
+	Manager manager;
 };
 
 #endif // MANAGER_HPP

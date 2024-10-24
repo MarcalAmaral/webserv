@@ -13,16 +13,18 @@ OBJECT = $(SOURCE:%.cpp=$(BUILD)/%.o)
 
 INCLUDE = -I./src -I./include
 
+MACRO = $(MACROS)
+
 define makedir
 	@mkdir -p $(dir $@)
 endef
 
 define compile_objects
-	$(CXX) -c $(CXXFLAGS) $(INCLUDE) -o $@ $<
+	$(CXX) -c $(CXXFLAGS) $(MACRO) $(INCLUDE) -o $@ $<
 endef
 
 define compile_executable
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ $^
+	$(CXX) $(CXXFLAGS) $(MACRO) $(INCLUDE) -o $@ $^
 endef
 
 define clean_objects
@@ -49,6 +51,8 @@ fclean: clean
 	$(call clean_executable)
 
 re: fclean all
+
+debug: $(NAME_DEBUG)
 
 .PHONY: all clean fclean re Makefile
 .DEFAULT_GOAL: all
