@@ -85,13 +85,13 @@ namespace Master {
 		// 	void *(*conf_cmd)(t_conf_file *cf, std::vector<string>::iterator &it);
 		// } t_conf_commands;
 
-		void	parser(const char *pathname);
+		void	parser(t_conf_file *cf, const char *pathname);
 		void	readTokens(t_conf_file *cf);
 		void	appendToken(t_conf_file *cf, const std::string &token);
 		void	lineToTokens(t_conf_file *cf, std::string &line);
 		void	delimitingDirectives(t_conf_file *cf);
 		bool	checkDirectives(std::string &directive, enum e_context type);
-		void	processTokens(t_conf_file *cf, std::vector<std::string>::iterator &line);
+		void	processTokens(t_conf_file *cf);
 
 		// main directive
 		void	handleServer(t_conf_file *cf, std::vector<std::string>::iterator &it, std::vector<int>::iterator &curLine);
@@ -111,9 +111,8 @@ namespace Master {
 		void	handleLocationCGI();
 		void	handleLocationUploadDir();
 		// void	handleServerBlockDirective(std::vector<string> &lines, std::vector<estring>::iterator &start);
-		t_conf_file cf;
 		// initialize values of t_conf_file cf
-		void	initConf(void);
+		void	initConf(t_conf_file *cf);
 	}
 }
 

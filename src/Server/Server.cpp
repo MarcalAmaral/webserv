@@ -131,8 +131,10 @@ void	Server::initLoopEvent(void) {
 			for (int i = 0; i < _eventsOcurred; ++i) {
 				if (_events[i].events & EPOLLIN && (serverFd = isNewConnetion(_events[i].data.fd) != 0))
 					acceptConnection(serverFd);
-				else if (_events[i].events & EPOLLIN) 
-					clients[events[i].data.fd].readRequest();
+				else if (_events[i].events & EPOLLIN) {
+					if (isClientFd(_events[i].data.fd))
+						clients[events[i].data.fd].readRequest();
+				}
 				else if (_events[i].events & EPOLLOUT)
 					clients[events[i].data.fd].sendResponse();
 				else if (_events[i].events & EPOLLRDHUP || _events[i].events & EPOLLHUP) {

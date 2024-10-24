@@ -2,10 +2,15 @@
 # define PARSER_HANDLER_HPP
 
 # include "Parser.hpp"
+# include "Server.hpp"
+# include "Location.hpp"
 
 namespace Master {
+
 	namespace Parser {
+
 		namespace Handler {
+
 			class HandlerClass {
 				private:
 					const std::string _cmd;
@@ -13,9 +18,9 @@ namespace Master {
 				public:
 					HandlerClass(const std::string &cmd, const unsigned int type) : _cmd(cmd), _type(type) {};
 					virtual ~HandlerClass() {};
-					virtual void *handler(Parser::t_conf_file *cf) = 0;
+					virtual void *handler(Parser::t_conf_file *cf, Server &srv, Location &loc) = 0;
 					const std::string &getCmd(void) {return (_cmd);}
-					const unsigned int getType(void)  {return (_type);}
+					unsigned int getType(void)  {return (_type);}
 			};
 
 			class ServerHandler : public HandlerClass {

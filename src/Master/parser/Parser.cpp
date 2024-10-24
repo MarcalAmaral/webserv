@@ -11,37 +11,65 @@
 #include "Utils/Utils.hpp"
 #include "Logger/Logger.hpp"
 
-void	Master::Parser::initConf(void) {
+void	Master::Parser::initConf(t_conf_file *cf) {
 	using namespace Master::Parser;
-	cf.line = 1;
-	cf.pathname = NULL;
+	cf->line = 1;
+	cf->pathname = NULL;
 }
 
-void	*handlerDirective(t_conf_file *cf) {
+// void	*handlerDirective(t_conf_file *cf) {
 
-}
+// }
 
-void	Master::Parser::parser(const char *pathname) {
+void	Master::Parser::parser(t_conf_file *cf, const char *pathname) {
 	using namespace Master::Parser;
 
 	if (pathname) {
-		Validation::validateFile(&cf);
-		readTokens(&cf);
+		cf->pathname = pathname;
+		Validation::validateFile(cf);
+		readTokens(cf);
 	}
-	processTokens(&cf);
+#if (PRINT_TOKENS != 1)
+	processTokens(cf);
+#endif
 }
 
 void	Master::Parser::processTokens(t_conf_file *cf) {
+	using namespace Master::Parser;
+	using namespace Logger;
 	enum {
-		START_BLOCK,
-		
-		END_FILE,
+		main,
+		srv,
+		loc
+	} context;
+	bool	onBlock = false;
+	std::vector<int>::iterator cline = cf->tokensLine.begin();
 
-	} state;
+	context = main;
+	for (std::vector<std::string>::iterator it=cf->tokens.begin(); it != cf->tokens.end(); ++it) {
+		if (context == main) {
+			if (checkDirectives(*it, ALL)) {
+				if (*it == "server") {
+					cf->handlers[*it]->handler(cf, NULL, );
+
+				}
+				else
+					throw (std::runtime_error(cfSynxtaxErr(cf->pathname, *it, "directive not allow here")))
+			}
+		} else if (context = srv) {
+
+		} else if (context = loc) {
+
+		}
+		cline++;
+		// for (std::string::iterator ch=it->begin(); ch != it->end(); ++ch) {
+
+		// }
+	}
 }
 
-bool	Parser::checkDirectives(string &directive, enum e_context type) {
-	const string directives[13] = {"server", "listen", "server_name",
+bool	Master::Parser::checkDirectives(std::string &directive, enum e_context type) {
+	const std::string directives[13] = {"server", "listen", "server_name",
 	"client_max_body_size", "error_page", "location", "allow_methods", "redirect", "root",
 	"autoindex", "index", "cgi", "upload_dir"};
 
@@ -109,15 +137,15 @@ bool	Parser::checkDirectives(string &directive, enum e_context type) {
 // 	}
 // }
 
-void	Parser::appendToken(t_conf_file *cf, const string &token) {
+void	Master::Parser::appendToken(t_conf_file *cf, const std::string &token) {
 	cf->tokens.push_back(token);
 	cf->tokensLine.push_back(cf->line);
 }
 
-void	Parser::lineToTokens(t_conf_file *cf, string &line) {
+void	Master::Parser::lineToTokens(t_conf_file *cf, std::string &line) {
 	bool	endToken = false;
-	string	token = "";
-	string	fline(Parser::Utils::removeCommentsAndSpaces(line));
+	std::string	token = "";
+	std::string	fline(Master::Parser::Utils::removeCommentsAndSpaces(line));
 
 	if (fline.empty())
 		return ;
@@ -128,40 +156,43 @@ void	Parser::lineToTokens(t_conf_file *cf, string &line) {
 			endToken = true;
 		}
 		else if (fline[it] == '{')
-			Parser::appendToken(cf, "{");
+			Master::Parser::appendToken(cf, "{");
 		else if (fline[it] == '}')
-			Parser::appendToken(cf, "}");
+			Master::Parser::appendToken(cf, "}");
 		else if (fline[it] != '{' && fline[it] != '}')
 			token.push_back(fline[it]);
 		if (endToken == true) {
-			if (token.size() > 0)
-				Parser::appendToken(cf, token);
 			endToken = false;
-			token.clear();
+			if (token.size() > 0 && (token == "server" || token == "location")) {
+				Master::Parser::appendToken(cf, token);
+				token.clear();
+			}
+			else if (token.size() > 0)
+				token.push_back(' ');
 		}
 	}
+	if (token.size() > 0)
+		Master::Parser::appendToken(cf, token);
 }
 
-void	Parser::readTokens(t_conf_file *cf) {
-	using namespace Logger;
-	string	line;
-	string	fline;
+void	Master::Parser::readTokens(t_conf_file *cf) {
+	std::string	line;
 
 	while (getline(cf->file, line)) {
-		fline = Parser::Utils::removeCommentsAndSpaces(line);
-		if (fline.size() > 0) {
-			cf->tokens.push_back(fline);
+		// if (fline.size() > 0) {
+		Master::Parser::lineToTokens(cf, line);
+		cf->line++;
+			// cf->tokens.push_back(fline);
 			// cf->tokensLine.push_back(cf->currentLine);
-		}
-		// Parser::lineToTokens(cf, line);
+		// }
 	}
 	if (cf->file.bad() == true)
-		throw (runtime_error(cfFileErr(cf->pathname, std::strerror(errno))));
+		throw (std::runtime_error(Logger::cfFileErr(cf->pathname, std::strerror(errno))));
 #if (PRINT_TOKENS == 1)
-	vector<int>::iterator itInt = cf->tokensLine.begin();
-	for (vector<string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it) {
-		cout << "\t" << *itInt << endl;
-		cout << *it << endl;
+	std::vector<int>::iterator itInt = cf->tokensLine.begin();
+	for (std::vector<std::string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it) {
+		std::cout << "\t" << *itInt << std::endl;
+		std::cout << *it << std::endl;
 		++itInt;
 	}
 #endif

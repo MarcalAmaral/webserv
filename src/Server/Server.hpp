@@ -7,7 +7,7 @@
 # include "defines.hpp"
 # include <sys/epoll.h>
 
-class Server {
+class Server : public Request, public Response  {
 	private:
 		struct sockaddr_in _serverAddr;
 		int	_serverSocket;
