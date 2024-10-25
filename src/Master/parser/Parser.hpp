@@ -8,8 +8,8 @@
 // # include "ParserHandlers.hpp"
 // # define WEBSERV_CONF_FILE_ERROR(file, error) (std::ostringstream() << "webserv: configuration file error: " << file << " " << error).c_str()
 
-namespace Master {
-	namespace Parser {
+namespace master {
+	namespace parser {
 		#define MAIN_CONF   0x02000000
 		#define SRV_CONF    0x04000000
 		#define LOC_CONF    0x08000000
@@ -73,6 +73,7 @@ namespace Master {
 			const char *pathname;
 			// std::vector<Directive> directives;
 			// std::map<string, Handler::HandlerClass *> handlers;
+			std::vector<std::string> args;
 			std::vector<std::string>::iterator it;
 			std::vector<std::string> tokens;
 			std::vector<int> tokensLine;
@@ -92,6 +93,8 @@ namespace Master {
 		void	delimitingDirectives(t_conf_file *cf);
 		bool	checkDirectives(std::string &directive, enum e_context type);
 		void	processTokens(t_conf_file *cf);
+		void	get_args(t_conf_file *cf, unsigned int num_tokens, std::vector<std::string>::iterator last_token);
+		void	handle_directive(t_conf_file *cf);
 
 		// main directive
 		void	handleServer(t_conf_file *cf, std::vector<std::string>::iterator &it, std::vector<int>::iterator &curLine);

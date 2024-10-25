@@ -3,9 +3,9 @@
 
 # include <string>
 
-namespace Master {
-    namespace Parser {
-        namespace Utils {
+namespace master {
+    namespace parser {
+        namespace utils {
             std::string removeCommentsAndSpaces(const std::string &line);
             // void adjustBracketsLeft(std::string &fline);
         }

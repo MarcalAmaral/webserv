@@ -5,9 +5,9 @@
 
 struct t_conf_file;
 
-namespace Master {
-	namespace Parser {
-		namespace Validation {
+namespace master {
+	namespace parser {
+		namespace validation {
 			void	validateFile(t_conf_file *conf);
 		}
 	}

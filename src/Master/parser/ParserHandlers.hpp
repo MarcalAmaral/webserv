@@ -5,13 +5,13 @@
 # include "Server.hpp"
 # include "Location.hpp"
 
-namespace Master {
+namespace master {
 
-	namespace Parser {
+	namespace parser {
 
-		namespace Handler {
+		inline namespace handler {
 
-			class HandlerClass {
+			class base {
 				private:
 					const std::string _cmd;
 					const unsigned int _type;
@@ -113,7 +113,7 @@ namespace Master {
 					~UploadDirHandler();
 					void	*handler(Parser::t_conf_file *cf);
 			};
-			void	initHandlerModules(Parser::t_conf_file *cf);
+			void	init_handler_modules(Parser::t_conf_file *cf);
 		}
 	}
 }
