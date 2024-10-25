@@ -2,7 +2,7 @@
 # define MASTER_HPP
 
 namespace Master {
-	std::vector<Server>	
+	
 };
 
 #endif // MASTER_HPP

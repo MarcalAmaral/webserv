@@ -1,199 +1,234 @@
-#include <vector>
-#include <fstream>
-#include <iostream>
-#include <cstring>
-#include <sstream>
-#include <cctype>
-#include "Parser.hpp"
-#include "ParserValidations.hpp"
-// #include "ParserHandlers.hpp"
-#include "ParserUtils.hpp"
-#include "Utils/Utils.hpp"
-#include "Logger/Logger.hpp"
+// #include <vector>
+// #include <fstream>
+// #include <iostream>
+// #include <cstring>
+// #include <sstream>
+// #include <cctype>
+// #include "Parser.hpp"
+// #include "ParserValidations.hpp"
+// // #include "ParserHandlers.hpp"
+// #include "ParserUtils.hpp"
+// #include "Utils/Utils.hpp"
+// #include "Logger/Logger.hpp"
 
-void	Master::Parser::initConf(t_conf_file *cf) {
-	using namespace Master::Parser;
-	cf->line = 1;
-	cf->pathname = NULL;
-}
-
-// void	*handlerDirective(t_conf_file *cf) {
-
+// void	Master::Parser::initConf(t_conf_file *cf) {
+// 	using namespace Master::Parser;
+// 	cf->line = 1;
+// 	cf->pathname = NULL;
 // }
 
-void	Master::Parser::parser(t_conf_file *cf, const char *pathname) {
-	using namespace Master::Parser;
+// // void	*handlerDirective(t_conf_file *cf) {
 
-	if (pathname) {
-		cf->pathname = pathname;
-		Validation::validateFile(cf);
-		readTokens(cf);
-	}
-#if (PRINT_TOKENS != 1)
-	processTokens(cf);
-#endif
-}
+// // }
 
-void	Master::Parser::processTokens(t_conf_file *cf) {
-	using namespace Master::Parser;
-	using namespace Logger;
-	enum {
-		main,
-		srv,
-		loc
-	} context;
-	bool	onBlock = false;
-	std::vector<int>::iterator cline = cf->tokensLine.begin();
+// void	Master::Parser::parser(t_conf_file *cf, const char *pathname) {
+// 	using namespace Master::Parser;
 
-	context = main;
-	for (std::vector<std::string>::iterator it=cf->tokens.begin(); it != cf->tokens.end(); ++it) {
-		if (context == main) {
-			if (checkDirectives(*it, ALL)) {
-				if (*it == "server") {
-					cf->handlers[*it]->handler(cf, NULL, );
+// 	if (pathname) {
+// 		cf->pathname = pathname;
+// 		Validation::validateFile(cf);
+// 		readTokens(cf);
+// 	}
+// #if (PRINT_TOKENS != 1)
+// 	processTokens(cf);
+// #endif
+// }
 
-				}
-				else
-					throw (std::runtime_error(cfSynxtaxErr(cf->pathname, *it, "directive not allow here")))
-			}
-		} else if (context = srv) {
+// void	Master::Parser::processTokens(t_conf_file *cf) {
+// 	using namespace Master::Parser;
+// 	using namespace Logger;
+// 	enum {
+// 		main,
+// 		srv,
+// 		loc
+// 	} context;
+// 	bool	openSrvBlock = false;
+// 	bool	openLocBlock = false;
+// 	std::vector<int>::iterator cline = cf->tokensLine.begin();
 
-		} else if (context = loc) {
-
-		}
-		cline++;
-		// for (std::string::iterator ch=it->begin(); ch != it->end(); ++ch) {
-
-		// }
-	}
-}
-
-bool	Master::Parser::checkDirectives(std::string &directive, enum e_context type) {
-	const std::string directives[13] = {"server", "listen", "server_name",
-	"client_max_body_size", "error_page", "location", "allow_methods", "redirect", "root",
-	"autoindex", "index", "cgi", "upload_dir"};
-
-	if (type == Parser::ALL) {
-		for (int i = 0; i < 13; ++i) {
-			if (directive == directives[i])
-				return true;
-		}
-	} else if (type == Parser::HTTP) {
-		for (int i = 0; i < 1; ++i) {
-			if (directive == directives[i])
-				return true;
-		}
-	} else if (type == Parser::SERVER) {
-		for (int i = 1; i < 6; ++i) {
-			if (directive == directives[i])
-				return true;
-		}
-	} else if (type == Parser::LOCATION) {
-		for (int i = 7; i < 13; ++i) {
-			if (directive == directives[i])
-				return true;
-		}
-	}
-	return false;
-}
-
-// void	Parser::processTokens(t_conf_file *cf) {
-// 	enum e_context context;
-// 	bool	startServerBlock = false;
-// 	vector<int>::iterator itLine = cf->tokensLine.begin();
-
-// 	for (vector<string>::iterator it=cf->tokens.begin(); it != cf->tokens.end(); ++it) {
-// 		if (context == HTTP) {
-// 			if (*it == "server")
-// 				context = SERVER;
-// 			else if (checkDirectives(*it, Parser::ALL))
-// 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "directive is not allowed here", *itLine)));
-// 			else
-// 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unknown directive", *itLine)));
-
-// 		} else if (context == SERVER) {
-// 			if (startServerBlock == false && *it == "{")
-// 				startServerBlock = true;
-// 			else if (startServerBlock == true && *it == "{")
-// 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unexpected", *itLine)));
-// 			else if (startServerBlock == true && *it == "}")
-// 				startServerBlock = false;
-// 			else if (startServerBlock == false && *it == "}")
-// 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unexpected", *itLine)));
-// 			else if (checkDirectives(*it, Parser::ALL) == true) {
-// 				if (checkDirectives(*it, Parser::SERVER) == false)
-// 					throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "directive is not allowed here", *itLine)));
-// 				if (*it == "location")
-// 					context = LOCATION;
-// 				// cf->handlers[*it].handler(cf, it, itLine);
+// 	context = main;
+// 	for (std::vector<std::string>::iterator it=cf->tokens.begin(); it != cf->tokens.end(); ++it) {
+// 		if (context == main) {
+// 			if (checkDirectives(*it, ALL)) {
+// 				if (*it == "server") {
+// 					context = srv;
+// 					// cf->handlers[*it]->handler(cf, NULL, NULL);
+// 				}
+// 				else
+// 					throw (std::runtime_error(cfSyntaxErr(cf->pathname, "directive not allow here", *it, *cline)));
 // 			}
 // 			else
-// 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unknown directive", *itLine)));
-			
-// 		} else if (context == LOCATION) {
-// 			continue ;
+// 				throw (std::runtime_error(cfSyntaxErr(cf->pathname, "unknown directive", *it, *cline)));
+// 		} else if (context = srv) {
+// 			if (*it == "{" && openSrvBlock == false)
+// 				openSrvBlock = true;
+// 			else if (*it == "}" && openSrvBlock == true)
+// 				openSrvBlock = false;
+// 			else if (*it == "{" && openSrvBlock == true)
+// 				throw (std::runtime_error(cfSyntaxErr(cf->pathname, "unexpected", *it, *cline)));
+// 			else if (*it == "}" && openSrvBlock == false)
+// 				throw (std::runtime_error(cfSyntaxErr(cf->pathname, "unexpected", *it, *cline)));
+// 			else if (checkDirectives(*it, ALL)) {
+// 				if (checkDirectives(*it, SERVER)) {
+// 					if (*it == "location")
+// 						context = loc;
+// 					cf->handlers[*it].handler(cf, _servers.end(), NULL);
+// 				}
+// 				else
+// 					throw (std::runtime_error(cfSyntaxErr(cf->pathname, "directive not allow here", *it, *cline)));
+// 			}
+// 			else
+// 				throw (std::runtime_error(cfSyntaxErr(cf->pathname, "unknown directive", *it, *cline)));
+// 		} else if (context = loc) {
+// 			if (*it == "{" && openLocBlock == false)
+// 				openLocBlock = true;
+// 			else if (*it == "}" && openLocBlock == true)
+// 				openLocBlock = false;
+// 			else if (*it == "{" && openLocBlock == true)
+// 				throw (std::runtime_error(cfSyntaxErr(cf->pathname, "unexpected", *it, *cline)));
+// 			else if (*it == "}" && openLocBlock == false)
+// 				throw (std::runtime_error(cfSyntaxErr(cf->pathname, "unexpected", *it, *cline)));
+// 			else if (checkDirectives(*it, ALL)) {
+// 				if (checkDirectives(*it, SERVER))
+// 					cf->handlers[*it].handler(cf, NULL, _servers.end()._locations.end());
+// 				else
+// 					throw (std::runtime_error(cfSyntaxErr(cf->pathname, "directive not allow here", *it, *cline)));
+// 			}
+// 			else
+// 				throw (std::runtime_error(cfSyntaxErr(cf->pathname, "unknown directive", *it, *cline)));
 // 		}
-// 		++itLine;
+// 		cline++;
 // 	}
 // }
 
-void	Master::Parser::appendToken(t_conf_file *cf, const std::string &token) {
-	cf->tokens.push_back(token);
-	cf->tokensLine.push_back(cf->line);
-}
+// bool	Master::Parser::checkDirectives(std::string &directive, enum e_context type) {
+// 	const std::string directives[13] = {"server", "listen", "server_name",
+// 	"client_max_body_size", "error_page", "location", "allow_methods", "redirect", "root",
+// 	"autoindex", "index", "cgi", "upload_dir"};
 
-void	Master::Parser::lineToTokens(t_conf_file *cf, std::string &line) {
-	bool	endToken = false;
-	std::string	token = "";
-	std::string	fline(Master::Parser::Utils::removeCommentsAndSpaces(line));
+// 	if (type == Parser::ALL) {
+// 		for (int i = 0; i < 13; ++i) {
+// 			if (directive == directives[i])
+// 				return true;
+// 		}
+// 	} else if (type == Parser::HTTP) {
+// 		for (int i = 0; i < 1; ++i) {
+// 			if (directive == directives[i])
+// 				return true;
+// 		}
+// 	} else if (type == Parser::SERVER) {
+// 		for (int i = 1; i < 6; ++i) {
+// 			if (directive == directives[i])
+// 				return true;
+// 		}
+// 	} else if (type == Parser::LOCATION) {
+// 		for (int i = 7; i < 13; ++i) {
+// 			if (directive == directives[i])
+// 				return true;
+// 		}
+// 	}
+// 	return false;
+// }
 
-	if (fline.empty())
-		return ;
-	for (size_t it = 0; it <= fline.size(); ++it) {
-		if (isspace(fline[it]) || fline[it] == ';' || it == fline.size()) {
-			if (fline[it] == ';')
-				token.push_back(';');
-			endToken = true;
-		}
-		else if (fline[it] == '{')
-			Master::Parser::appendToken(cf, "{");
-		else if (fline[it] == '}')
-			Master::Parser::appendToken(cf, "}");
-		else if (fline[it] != '{' && fline[it] != '}')
-			token.push_back(fline[it]);
-		if (endToken == true) {
-			endToken = false;
-			if (token.size() > 0 && (token == "server" || token == "location")) {
-				Master::Parser::appendToken(cf, token);
-				token.clear();
-			}
-			else if (token.size() > 0)
-				token.push_back(' ');
-		}
-	}
-	if (token.size() > 0)
-		Master::Parser::appendToken(cf, token);
-}
+// // void	Parser::processTokens(t_conf_file *cf) {
+// // 	enum e_context context;
+// // 	bool	startServerBlock = false;
+// // 	vector<int>::iterator itLine = cf->tokensLine.begin();
 
-void	Master::Parser::readTokens(t_conf_file *cf) {
-	std::string	line;
+// // 	for (vector<string>::iterator it=cf->tokens.begin(); it != cf->tokens.end(); ++it) {
+// // 		if (context == HTTP) {
+// // 			if (*it == "server")
+// // 				context = SERVER;
+// // 			else if (checkDirectives(*it, Parser::ALL))
+// // 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "directive is not allowed here", *itLine)));
+// // 			else
+// // 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unknown directive", *itLine)));
 
-	while (getline(cf->file, line)) {
-		// if (fline.size() > 0) {
-		Master::Parser::lineToTokens(cf, line);
-		cf->line++;
-			// cf->tokens.push_back(fline);
-			// cf->tokensLine.push_back(cf->currentLine);
-		// }
-	}
-	if (cf->file.bad() == true)
-		throw (std::runtime_error(Logger::cfFileErr(cf->pathname, std::strerror(errno))));
-#if (PRINT_TOKENS == 1)
-	std::vector<int>::iterator itInt = cf->tokensLine.begin();
-	for (std::vector<std::string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it) {
-		std::cout << "\t" << *itInt << std::endl;
-		std::cout << *it << std::endl;
-		++itInt;
-	}
-#endif
-}
+// // 		} else if (context == SERVER) {
+// // 			if (startServerBlock == false && *it == "{")
+// // 				startServerBlock = true;
+// // 			else if (startServerBlock == true && *it == "{")
+// // 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unexpected", *itLine)));
+// // 			else if (startServerBlock == true && *it == "}")
+// // 				startServerBlock = false;
+// // 			else if (startServerBlock == false && *it == "}")
+// // 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unexpected", *itLine)));
+// // 			else if (checkDirectives(*it, Parser::ALL) == true) {
+// // 				if (checkDirectives(*it, Parser::SERVER) == false)
+// // 					throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "directive is not allowed here", *itLine)));
+// // 				if (*it == "location")
+// // 					context = LOCATION;
+// // 				// cf->handlers[*it].handler(cf, it, itLine);
+// // 			}
+// // 			else
+// // 				throw (runtime_error(Logger::cfSyntaxErr(cf->pathname, *it, "unknown directive", *itLine)));
+			
+// // 		} else if (context == LOCATION) {
+// // 			continue ;
+// // 		}
+// // 		++itLine;
+// // 	}
+// // }
+
+// void	Master::Parser::appendToken(t_conf_file *cf, const std::string &token) {
+// 	cf->tokens.push_back(token);
+// 	cf->tokensLine.push_back(cf->line);
+// }
+
+// void	Master::Parser::lineToTokens(t_conf_file *cf, std::string &line) {
+// 	bool	endToken = false;
+// 	std::string	token = "";
+// 	std::string	fline(Master::Parser::Utils::removeCommentsAndSpaces(line));
+
+// 	if (fline.empty())
+// 		return ;
+// 	for (size_t it = 0; it <= fline.size(); ++it) {
+// 		if (isspace(fline[it]) || fline[it] == ';' || it == fline.size()) {
+// 			if (fline[it] == ';')
+// 				token.push_back(';');
+// 			endToken = true;
+// 		}
+// 		else if (fline[it] == '{')
+// 			Master::Parser::appendToken(cf, "{");
+// 		else if (fline[it] == '}')
+// 			Master::Parser::appendToken(cf, "}");
+// 		else if (fline[it] != '{' && fline[it] != '}')
+// 			token.push_back(fline[it]);
+// 		if (endToken == true) {
+// 			endToken = false;
+// 			if (token.size() > 0 && (token == "server" || token == "location")) {
+// 				Master::Parser::appendToken(cf, token);
+// 				token.clear();
+// 			}
+// 			else if (token.size() > 0)
+// 				token.push_back(' ');
+// 		}
+// 	}
+// 	if (token.size() > 0)
+// 		Master::Parser::appendToken(cf, token);
+// }
+
+// void	Master::Parser::readTokens(t_conf_file *cf) {
+// 	std::string	line;
+
+// 	while (getline(cf->file, line)) {
+// 		// if (fline.size() > 0) {
+// 		Master::Parser::lineToTokens(cf, line);
+// 		cf->line++;
+// 			// cf->tokens.push_back(fline);
+// 			// cf->tokensLine.push_back(cf->currentLine);
+// 		// }
+// 	}
+// 	if (cf->file.bad() == true)
+// 		throw (std::runtime_error(Logger::cfFileErr(cf->pathname, std::strerror(errno))));
+// #if (PRINT_TOKENS == 1)
+// 	std::vector<int>::iterator itInt = cf->tokensLine.begin();
+// 	for (std::vector<std::string>::iterator it = cf->tokens.begin(); it != cf->tokens.end(); ++it) {
+// 		std::cout << "\t" << *itInt << std::endl;
+// 		std::cout << *it << std::endl;
+// 		++itInt;
+// 	}
+// #endif
+// }
+
+void
