@@ -8,7 +8,7 @@ struct t_conf_file;
 namespace master {
 	namespace parser {
 		namespace validation {
-			void	validateFile(t_conf_file *conf);
+			void	validate_file(t_conf *cf);
 		}
 	}
 }

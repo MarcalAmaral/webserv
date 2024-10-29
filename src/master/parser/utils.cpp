@@ -1,17 +1,17 @@
 #include <iostream>
-#include "ParserUtils.hpp"
-#include "Utils/Utils.hpp"
+#include "utils.hpp"
+#include "utils/utils.hpp"
 #include <cctype>
 #include <algorithm>
 
-namespace CommonUtils = Utils;
+namespace common_utils = utils;
 
-std::string	Master::Parser::Utils::removeCommentsAndSpaces(const std::string &line) {
+std::string	master::parser::utils::remove_comments_spaces(const std::string &line) {
 	size_t	foundComment = line.find('#');
 
 	if (foundComment != std::string::npos)
-		return (CommonUtils::trim(line.substr(0, foundComment)));
-	return (CommonUtils::trim(line));
+		return (common_utils::trim(line.substr(0, foundComment)));
+	return (common_utils::trim(line));
 }
 
 // void	Master::Parser::Utils::adjustBracketsLeft(std::string &fline) {

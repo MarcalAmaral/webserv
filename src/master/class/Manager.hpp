@@ -6,7 +6,7 @@
 class Server;
 class Client;
 
-namespace Master {
+namespace master {
 	class Manager {
 		public:
 			Manager();
